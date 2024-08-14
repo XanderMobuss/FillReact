@@ -17,14 +17,37 @@
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
 
+        ctx.strokeRect(10,10,100,100);
+
         ctx.fillStyle ='blue';
-        ctx.fillRect(20,20,100,100);
+        ctx.fillRect(90,90,100,100);
 
         ctx.fillStyle ='red';
-        ctx.fillRect(100,100,100,100);
+        ctx.fillRect(170,170,100,100);
 
         ctx.fillStyle ='pink';
-        ctx.fillRect(180,180,100,100);
+        ctx.fillRect(250,250,100,100);
+
+
+        ctx.lineWidth="4";
+        ctx.strokeStyle="red";
+        ctx.strokeRect(330,330,100,100);
+
+
+        ctx.beginPath();
+        ctx.moveTo(350,50);
+        ctx.lineTo(350,150);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(110,200);
+        ctx.lineTo(20,350);
+        ctx.lineTo(200,350)
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+
      </script>
 </body>
 </html>
