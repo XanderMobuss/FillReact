@@ -51,11 +51,13 @@
         ctx.strokeStyle="green";
         ctx.beginPath();
         ctx.arc(500,500,50,0,2*Math.PI);
+        ctx.closePath();
         ctx.stroke();
 
         ctx.fillStyle ='blue';
         ctx.beginPath();
         ctx.arc(630,500,50,0,2*Math.PI);
+        ctx.closePath();
         ctx.fill();
 
         ctx.font = "40pt Roboto Slab";
@@ -68,8 +70,21 @@
 
         ctx.fillStyle = grd;
         ctx.fillRect(450,300, 150, 100);
-
         
+        const grd2 = ctx.createLinearGradient(450,150 , 600, 150);
+        grd2.addColorStop(0, "green");
+        grd2.addColorStop(1, "orange");
+
+        const grd3 = ctx.createRadialGradient(550,200,5, 550, 200,100);
+        grd3.addColorStop(0, "violet");
+        grd3.addColorStop(1, "cyan");
+
+        ctx.fillStyle=grd3;
+        ctx.fillRect(450,150, 200, 100);
+
+   
+        
+       
      </script>
 </body>
 </html>
