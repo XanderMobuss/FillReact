@@ -82,7 +82,14 @@
         ctx.fillStyle=grd3;
         ctx.fillRect(450,150, 200, 100);
 
-   
+
+        var img = new Image();
+        img.src="gaton.png";    
+       
+        img.onload= function(){
+            ctx.drawImage(img,50,50, 200, 200);
+        }
+        
         
        
      </script>
