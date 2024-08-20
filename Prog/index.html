@@ -62,10 +62,14 @@
         ctx.strokeText("Wep",500,50);
         ctx.fillText("Wep", 500, 50);
 
-       
+        const grd = ctx.createLinearGradient(450,300 , 600, 300);
+        grd.addColorStop(0, "blue");
+        grd.addColorStop(1, "red");
+
+        ctx.fillStyle = grd;
+        ctx.fillRect(450,300, 150, 100);
 
         
-
      </script>
 </body>
 </html>
