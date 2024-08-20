@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-     <canvas id="my_canvas" width="500" height="500"></canvas>
+     <canvas id="my_canvas" width="800" height="800"></canvas>
 
      <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
@@ -46,6 +46,16 @@
         ctx.lineTo(200,350)
         ctx.closePath();
         ctx.stroke();
+        ctx.fill();
+
+        ctx.strokeStyle="green";
+        ctx.beginPath();
+        ctx.arc(500,500,50,0,2*Math.PI);
+        ctx.stroke();
+
+        ctx.fillStyle ='blue';
+        ctx.beginPath();
+        ctx.arc(630,500,50,0,2*Math.PI);
         ctx.fill();
 
      </script>
