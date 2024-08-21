@@ -18,8 +18,19 @@
         const ctx = my_canvas.getContext('2d');
 
         my_canvas.addEventListener("click", (event) => {onclick});
+     
+
+        function colorAleatorio() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            const a = Math.random().toFixed(2); // Genera un número entre 0.00 y 1.00 para la transparencia
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
+        }
 
         onclick = (event) => {
+            const color = colorAleatorio(); 
+            ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(event.clientX,event.clientY,50,0,2*Math.PI);
             ctx.closePath();
