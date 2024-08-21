@@ -17,79 +17,14 @@
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
 
-        ctx.strokeRect(10,10,100,100);
+        my_canvas.addEventListener("click", (event) => {onclick});
 
-        ctx.fillStyle ='blue';
-        ctx.fillRect(90,90,100,100);
-
-        ctx.fillStyle ='red';
-        ctx.fillRect(170,170,100,100);
-
-        ctx.fillStyle ='pink';
-        ctx.fillRect(250,250,100,100);
-
-
-        ctx.lineWidth="4";
-        ctx.strokeStyle="red";
-        ctx.strokeRect(330,330,100,100);
-
-
-        ctx.beginPath();
-        ctx.moveTo(350,50);
-        ctx.lineTo(350,150);
-        ctx.closePath();
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(110,200);
-        ctx.lineTo(20,350);
-        ctx.lineTo(200,350)
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
-
-        ctx.strokeStyle="green";
-        ctx.beginPath();
-        ctx.arc(500,500,50,0,2*Math.PI);
-        ctx.closePath();
-        ctx.stroke();
-
-        ctx.fillStyle ='blue';
-        ctx.beginPath();
-        ctx.arc(630,500,50,0,2*Math.PI);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.font = "40pt Roboto Slab";
-        ctx.strokeText("Wep",500,50);
-        ctx.fillText("Wep", 500, 50);
-
-        const grd = ctx.createLinearGradient(450,300 , 600, 300);
-        grd.addColorStop(0, "blue");
-        grd.addColorStop(1, "red");
-
-        ctx.fillStyle = grd;
-        ctx.fillRect(450,300, 150, 100);
-        
-        const grd2 = ctx.createLinearGradient(450,150 , 600, 150);
-        grd2.addColorStop(0, "green");
-        grd2.addColorStop(1, "orange");
-
-        const grd3 = ctx.createRadialGradient(550,200,5, 550, 200,100);
-        grd3.addColorStop(0, "violet");
-        grd3.addColorStop(1, "cyan");
-
-        ctx.fillStyle=grd3;
-        ctx.fillRect(450,150, 200, 100);
-
-
-        var img = new Image();
-        img.src="gaton.png";    
-       
-        img.onload= function(){
-            ctx.drawImage(img,50,50, 200, 200);
-        }
-        
+        onclick = (event) => {
+            ctx.beginPath();
+            ctx.arc(event.clientX,event.clientY,50,0,2*Math.PI);
+            ctx.closePath();
+            ctx.fill();
+        };
         
        
      </script>
