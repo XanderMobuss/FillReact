@@ -24,6 +24,7 @@
         my_canvas.addEventListener("mousemove",(event) => {onmousemove});
         my_canvas.addEventListener("mousedown",(event) => {onmousedown});
         my_canvas.addEventListener("mouseup",(event) => {onmouseup});
+        my_canvas.addEventListener("keydown",(event) => {onkeydown});
 
 
 
@@ -42,9 +43,24 @@
 
         };
 
-        onmouseup   = (event) => {
+        onmouseup = (event) => {
 
             presion=false;
+
+        };
+
+        onkeydown = (event) => {
+            let x = Math.random()*800;
+            let y = Math.random()*800;
+            const color = colorAleatorio(); 
+            ctx.fillStyle = color;
+            ctx.fillRect(x,y,100,100);
+
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(event.key, x + 50, y + 50);
 
         };
 
@@ -53,7 +69,7 @@
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
             ctx.strokeStyle = 'black';
-            
+    
             ctx.beginPath();
             ctx.arc(event.clientX,event.clientY,2,0,2*Math.PI);
             ctx.closePath();
