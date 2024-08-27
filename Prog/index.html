@@ -16,10 +16,16 @@
      <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
+     
 
+        let presion = false;
         my_canvas.addEventListener("click", (event) => {onclick});
         document.getElementById("my_canvas").addEventListener("mouseout", mouseOut);
         my_canvas.addEventListener("mousemove",(event) => {onmousemove});
+        my_canvas.addEventListener("mousedown",(event) => {onmousedown});
+        my_canvas.addEventListener("mouseup",(event) => {onmouseup});
+
+
 
         function colorAleatorio() {
             const r = Math.floor(Math.random() * 256);
@@ -30,7 +36,20 @@
         }
         var a=1;
 
+        onmousedown = (event) => {
+
+            presion=true;
+
+        };
+
+        onmouseup   = (event) => {
+
+            presion=false;
+
+        };
+
         onmousemove = (event) => {
+            if(presion){
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
             ctx.strokeStyle = 'black';
@@ -39,6 +58,7 @@
             ctx.arc(event.clientX,event.clientY,2,0,2*Math.PI);
             ctx.closePath();
             ctx.fill();
+            }
         };
 
         onclick = (event) => {
