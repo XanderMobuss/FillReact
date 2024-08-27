@@ -30,6 +30,7 @@
         }
 
         function drawSquare() {
+            ctx.clearRect(0, 0, my_canvas.width, my_canvas.height); 
             ctx.fillStyle = color;
             ctx.fillRect(x, y, squareSize, squareSize);
         }
