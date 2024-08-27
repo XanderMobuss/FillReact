@@ -5,99 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style type="text/css">
-        canvas{
-            
+        canvas {
         }
     </style>
 </head>
 <body>
-     <canvas id="my_canvas" width="800" height="800"></canvas>
+    <canvas id="my_canvas" width="800" height="800"></canvas>
 
-     <script type="text/javascript">
+
+    <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
-     
 
-        let presion = false;
-        my_canvas.addEventListener("click", (event) => {onclick});
-        document.getElementById("my_canvas").addEventListener("mouseout", mouseOut);
-        my_canvas.addEventListener("mousemove",(event) => {onmousemove});
-        my_canvas.addEventListener("mousedown",(event) => {onmousedown});
-        my_canvas.addEventListener("mouseup",(event) => {onmouseup});
-        my_canvas.addEventListener("keydown",(event) => {onkeydown});
-
-
+        let squareSize = 50;
+        let x = my_canvas.width / 2 - squareSize / 2;
+        let y = my_canvas.height / 2 - squareSize / 2;
+        let color = 'blue';
 
         function colorAleatorio() {
             const r = Math.floor(Math.random() * 256);
             const g = Math.floor(Math.random() * 256);
             const b = Math.floor(Math.random() * 256);
-            const a = Math.random().toFixed(2);
-            return `rgba(${r}, ${g}, ${b}, ${a})`;
+            return `rgb(${r}, ${g}, ${b})`;
         }
-        var a=1;
 
-        onmousedown = (event) => {
-
-            presion=true;
-
-        };
-
-        onmouseup = (event) => {
-
-            presion=false;
-
-        };
-
-        onkeydown = (event) => {
-            let x = Math.random()*800;
-            let y = Math.random()*800;
-            const color = colorAleatorio(); 
+        function drawSquare() {
             ctx.fillStyle = color;
-            ctx.fillRect(x,y,100,100);
+            ctx.fillRect(x, y, squareSize, squareSize);
+        }
 
-            ctx.fillStyle = 'black';
-            ctx.font = '20px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(event.key, x + 50, y + 50);
-
-        };
-
-        onmousemove = (event) => {
-            if(presion){
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = 'black';
-    
-            ctx.beginPath();
-            ctx.arc(event.clientX,event.clientY,2,0,2*Math.PI);
-            ctx.closePath();
-            ctx.fill();
+        function moveSquare(event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                    y = y - 10 >= 0 ? y - 10 : 0;
+                    break;
+                case 'ArrowDown':
+                    y = y + 10 + squareSize <= my_canvas.height ? y + 10 : my_canvas.height - squareSize;
+                    break;
+                case 'ArrowLeft':
+                    x = x - 10 >= 0 ? x - 10 : 0;
+                    break;
+                case 'ArrowRight':
+                    x = x + 10 + squareSize <= my_canvas.width ? x + 10 : my_canvas.width - squareSize;
+                    break;
             }
-        };
+            color = colorAleatorio(); 
+            drawSquare(); 
+        }
 
-        onclick = (event) => {
-            const color = colorAleatorio(); 
-            ctx.fillStyle = color;
+        document.addEventListener('keydown', moveSquare);
 
-            if(a==0){
-                ctx.beginPath();
-                ctx.arc(event.clientX,event.clientY,50,0,2*Math.PI);
-                ctx.closePath();
-                ctx.fill();
-            } else {
-                ctx.fillRect(event.clientX-50,event.clientY-50,100,100);
-            }
-            a=1;
-        };
-
-        function mouseOut() {   
-               a=1;
-        
-        };
-        
-       
-     </script>
+        drawSquare();
+    </script>
 </body>
 </html>
