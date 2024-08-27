@@ -19,6 +19,7 @@
 
         my_canvas.addEventListener("click", (event) => {onclick});
         document.getElementById("my_canvas").addEventListener("mouseout", mouseOut);
+        my_canvas.addEventListener("mousemove",(event) => {onmousemove});
 
         function colorAleatorio() {
             const r = Math.floor(Math.random() * 256);
@@ -27,7 +28,19 @@
             const a = Math.random().toFixed(2);
             return `rgba(${r}, ${g}, ${b}, ${a})`;
         }
-        var a=0;
+        var a=1;
+
+        onmousemove = (event) => {
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            
+            ctx.beginPath();
+            ctx.arc(event.clientX,event.clientY,2,0,2*Math.PI);
+            ctx.closePath();
+            ctx.fill();
+        };
+
         onclick = (event) => {
             const color = colorAleatorio(); 
             ctx.fillStyle = color;
@@ -40,7 +53,7 @@
             } else {
                 ctx.fillRect(event.clientX-50,event.clientY-50,100,100);
             }
-            a=0;
+            a=1;
         };
 
         function mouseOut() {   
