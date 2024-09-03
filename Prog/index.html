@@ -1,62 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style type="text/css">
-        canvas {
-        }
-    </style>
 </head>
+
 <body>
     <canvas id="my_canvas" width="800" height="800"></canvas>
-
 
     <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
 
-        let squareSize = 50;
-        let x = my_canvas.width / 2 - squareSize / 2;
-        let y = my_canvas.height / 2 - squareSize / 2;
-        let color = 'blue';
+        
 
-        function colorAleatorio() {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            return `rgb(${r}, ${g}, ${b})`;
+
+        let y = 300;
+        let x = 300;
+
+        let speed = 0;
+
+        var direction = "";
+
+        function getRandomColor() {
+            var trans = '0.5';
+            var color = 'rgba(';
+            for (var i = 0; i < 3; i++) {
+                color += Math.floor(Math.random() * 255) + ',';
+            }
+            color += trans + ')'; 
+            return color;
+        }
+        
+
+        class constructorRectangulo {
+            constructor(x, y, w, h, c, s) {
+                this.x = x;
+                this.y = y;
+                this.w = w;
+                this.h = h;
+                this.c = c;
+                this.s = s;
+            }
+
+            tocando(otro) {
+                if (this.x < otro.x + otro.w &&
+                    this.x + this.w > otro.x &&
+                    this.y < otro.y + otro.h &&
+                    this.y + this.h > otro.y) {
+
+                    return true;
+                }
+                return false;
+            }
         }
 
-        function drawSquare() {
-            ctx.clearRect(0, 0, my_canvas.width, my_canvas.height); 
-            ctx.fillStyle = color;
-            ctx.fillRect(x, y, squareSize, squareSize);
-        }
+        document.addEventListener("keydown", function (e) {
+            console.log(e)
 
-        function moveSquare(event) {
-            switch (event.key) {
-                case 'ArrowUp':
-                    y = y - 10 >= 0 ? y - 10 : 0;
+            switch (e.keyCode) {
+                case 37:
+                    direction = "left";
                     break;
-                case 'ArrowDown':
-                    y = y + 10 + squareSize <= my_canvas.height ? y + 10 : my_canvas.height - squareSize;
+                case 38:
+                    direction = "up";
                     break;
-                case 'ArrowLeft':
-                    x = x - 10 >= 0 ? x - 10 : 0;
+                case 39:
+                    direction = "right";
                     break;
-                case 'ArrowRight':
-                    x = x + 10 + squareSize <= my_canvas.width ? x + 10 : my_canvas.width - squareSize;
+                case 40:
+                    direction = "down";
+                    break;
+                case 32:
+                    direction = "space";
+                    speed = speed + 0.5;
                     break;
             }
-            color = colorAleatorio(); 
-            drawSquare(); 
+        })
+
+        function update() {
+            switch (direction) {
+                case "left":
+                    if (speed > 10) {
+                        player.x = player.x - 10 - speed;
+                    } else {
+                        player.x = player.x - 10;
+                    }
+                    if (player.x <= -40) {
+                        player.x = 830;
+                    }
+                    break;
+                case "up":
+                    if (speed > 10) {
+                        player.y = player.y - 10 - speed;
+                    } else {
+                        player.y = player.y - 10;
+                    }
+                    if (player.y <= -40) {
+                        player.y = 830;
+                    }
+                    break;
+                case "right":
+                    if (speed > 10) {
+                        player.x = player.x + 10 + speed;
+                    } else {
+                        player.x = player.x + 10;
+                    }
+                    if (player.x >= 800) {
+                        player.x = -40;
+                    }
+                    break;
+                case "down":
+                    if (speed > 10) {
+                        player.y = player.y + 10 + speed;
+                    } else {
+                        player.y = player.y + 10;
+                    }
+                    if (player.y >= 800) {
+                        player.y = -40;
+                    }
+                    break;
+            }
+            if (player.tocando(target)) {
+                target.x = Math.random() * 800;
+                target.y = Math.random() * 800;
+            }
         }
 
-        document.addEventListener('keydown', moveSquare);
+        function pintar() {
+            ctx.fillStyle = 'lightgreen';
+            ctx.fillRect(0, 0, 800, 800);
 
-        drawSquare();
+            ctx.fillStyle = getRandomColor();
+
+            ctx.fillRect(player.x, player.y, 50, 50);
+            ctx.strokeRect(player.x, player.y, 50, 50);
+
+            ctx.fillRect(target.x, target.y, 20, 20);
+            ctx.strokeRect(target.x, target.y, 20, 20);
+
+            
+
+            update();
+            requestAnimationFrame(pintar);
+        }
+
+        requestAnimationFrame(pintar);
+
+      
+
+       
+        const player = new constructorRectangulo(280, 280, 50, 50, getRandomColor(), 10);
+        const target = new constructorRectangulo(280, 280, 20, 20, "red", 10);
+        
+
+
+
     </script>
+   
 </body>
+
 </html>
