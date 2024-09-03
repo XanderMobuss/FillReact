@@ -10,72 +10,70 @@
     </style>
 </head>
 <body>
-    <canvas id="myCanvas" width="800" height="400"></canvas>
+    <canvas id="myCanvas" width="800" height="800"></canvas>
 
     <script>
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = 'lightblue';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = '#fcb88a';
         ctx.beginPath();
-        ctx.arc(100, 100, 50, 0, Math.PI * 2);
+        ctx.arc(200, 150, 80, 0, Math.PI * 2);
         ctx.fill();
 
-        function cerros(x, y, width, height, color) {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x + width / 2, y - height);
-            ctx.lineTo(x + width, y);
-            ctx.closePath();
-            ctx.fill();
-        }
-
-        cerros(50, 300, 200, 150, 'darkgrey');
-        cerros(200, 300, 200, 100, 'grey');
-        cerros(350, 300, 200, 150, 'darkgrey');
-
-        ctx.fillStyle = 'green';
-        ctx.fillRect(0, 300, canvas.width, 100);
-
-        function arboloskis(x, y) {
-            ctx.fillStyle = 'saddlebrown';
-            ctx.fillRect(x, y, 20, 60);
-
-            ctx.fillStyle = 'green';
-            ctx.beginPath();
-            ctx.arc(x + 10, y - 10, 30, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        arboloskis(600, 270);
-        arboloskis(700, 270);
-        
-
-        ctx.fillStyle = 'saddlebrown';
-        ctx.beginPath();
-        ctx.moveTo(400, 300);
-        ctx.lineTo(420, 300);
-        ctx.lineTo(500, 400);
-        ctx.lineTo(300, 400);
-        ctx.closePath();
-        ctx.fill();
-
-        
-        function nubesonas(x, y) {
+        function ojos(x, y) {
             ctx.fillStyle = 'white';
             ctx.beginPath();
             ctx.arc(x, y, 20, 0, Math.PI * 2);
-            ctx.arc(x + 30, y, 30, 0, Math.PI * 2);
-            ctx.arc(x + 60, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(x, y, 10, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        nubesonas(500, 80);
-        nubesonas(200, 50);
+        ojos(170, 130);
+        ojos(230, 130);
+
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(200, 170, 40, 0, Math.PI, false);
+        ctx.stroke();
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(150, 230, 100, 150);
+        ctx.fillRect(125, 230, 150, 30);
+
+        ctx.fillStyle = 'peachpuff';
+        ctx.fillRect(125, 260, 30, 90);
+        ctx.fillRect(245, 260, 30, 90);
+
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.moveTo(150,380);
+        ctx.lineTo(150,500);
+        ctx.lineTo(180,500);
+        ctx.lineTo(200,420);
+        ctx.lineTo(220,500);
+        ctx.lineTo(250,500);
+        ctx.lineTo(250,380);
+        ctx.closePath();
+        ctx.fill();
+
+
+
+
+
+        
+        ctx.fillStyle = 'black';
+        ctx.fillRect(120, 90, 160, 30);
+        ctx.fillStyle = 'black';
+        ctx.fillRect(150, 30, 100, 70);
+
+        ctx.fillRect(150, 500, 50, 30);
+        ctx.fillRect(220, 500, 50, 30);
 
     </script>
 </body>
