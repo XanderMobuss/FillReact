@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Canvas</title>
 </head>
 <body>
     <canvas id="myCanvas" width="800" height="400"></canvas>
@@ -12,86 +12,74 @@
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         
-        const tamaño = 40;
-        for (let y = 300; y < 400; y += tamaño) {
-            for (let x = 0; x < canvas.width; x += tamaño) {
-                ctx.fillStyle = 'saddlebrown';
-                
-                ctx.fillRect(x, y, tamaño, tamaño);
+        
+
+        ctx.fillStyle = 'skyblue';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+        
+        ctx.fillStyle = 'green';
+        ctx.fillRect(500, 220, 80, 200);
+        ctx.fillRect(490, 220, 100, 30);
+
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(490, 220, 100, 30);
+        ctx.strokeRect(500, 250, 80, 170);
+
+
+        
+        function bloque(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, width, height);
+
+            const bloqueColor = 6;
+            ctx.fillStyle = 'gray';
+            ctx.fillRect(x + 4, y + 4, bloqueColor, bloqueColor);
+            ctx.fillRect(x + width - bloqueColor - 4, y + 4, bloqueColor, bloqueColor);
+            ctx.fillRect(x + 4, y + height - bloqueColor - 4, bloqueColor, bloqueColor);
+            ctx.fillRect(x + width - bloqueColor - 4, y + height - bloqueColor - 4, bloqueColor, bloqueColor);
+        }
+
+
+        bloque(260, 120, 120, 200, '#85c1f9'); 
+        bloque(179, 199, 120, 120, '#ecbdab'); 
+        
+        bloque(679, 199, 120, 120, '#51d869');    
+
+        function piso() {
+            ctx.fillStyle = 'saddlebrown';
+            ctx.fillRect(0, 320, canvas.width, 80);
+
+            ctx.fillStyle = 'black';
+            for (let x = 0; x < canvas.width; x += 20) {
+                ctx.beginPath();
+                ctx.moveTo(x, 320);
+                ctx.lineTo(x + 20, 400);
+                ctx.stroke();
             }
         }
 
-        ctx.fillStyle = 'limegreen';
-        ctx.fillRect(0, 260, canvas.width, 40);
-
-        ctx.fillStyle = 'lime';
-        ctx.fillRect(0, 220, canvas.width, 40);
-
-        function palma(x, y) {
-            ctx.fillStyle = 'brown';
-            ctx.fillRect(x - 5, y - 80, 10, 80);
-
-            ctx.strokeStyle = 'yellowgreen';
-            ctx.lineWidth = 10;
-
-            ctx.beginPath();
-            ctx.moveTo(x, y - 90);
-            ctx.lineTo(x - 70, y - 140);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(x, y - 90);
-            ctx.lineTo(x + 70, y - 140);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(x, y - 85);
-            ctx.lineTo(x - 80, y - 110);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(x, y - 85);
-            ctx.lineTo(x + 80, y - 110);
-            ctx.stroke();
-        }
-
-        palma(-5, 220);
-        palma(560, 220);
-
-        function anillo(x, y) {
-            ctx.strokeStyle = 'gold';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
-
-        anillo(220, 160);
-        anillo(300, 160);
-        anillo(140, 160);
 
 
-        function girasol(x, y) {
-            ctx.fillStyle = 'yellow';
-            ctx.beginPath();
-            ctx.arc(x, y, 30, 0, 2 * Math.PI);
-            ctx.fill();
+        
+        
+        bloque(30, 150, 40, 40, '#ff915c');
+        bloque(740, 100, 40, 40, '#ff915c');
 
-            ctx.fillStyle = 'olive';
-            ctx.beginPath();
-            ctx.arc(x, y, 15, 0, 2 * Math.PI);
-            ctx.fill();
+        bloque(130, 50, 40, 40, '#ff915c');
+        bloque(171, 50, 40, 40, '#ff915c');
 
-            ctx.fillStyle = 'green';
-            ctx.fillRect(x-5,y+30,10,40);
-        }
 
-        girasol(720, 150);
-
+        piso();
+        
     </script>
 </body>
 </html>
