@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas</title>
+    <title></title>
+    <style type="text/css">
+        canvas {
+        }
+    </style>
 </head>
 <body>
     <canvas id="myCanvas" width="800" height="400"></canvas>
@@ -12,74 +16,67 @@
         const canvas = document.getElementById('myCanvas');
         const ctx = canvas.getContext('2d');
 
-
-        
-        
-
-        ctx.fillStyle = 'skyblue';
+        ctx.fillStyle = 'lightblue';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        ctx.fillStyle = 'yellow';
+        ctx.beginPath();
+        ctx.arc(100, 100, 50, 0, Math.PI * 2);
+        ctx.fill();
 
-        
-        ctx.fillStyle = 'green';
-        ctx.fillRect(500, 220, 80, 200);
-        ctx.fillRect(490, 220, 100, 30);
-
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(490, 220, 100, 30);
-        ctx.strokeRect(500, 250, 80, 170);
-
-
-        
-        function bloque(x, y, width, height, color) {
+        function cerros(x, y, width, height, color) {
             ctx.fillStyle = color;
-            ctx.fillRect(x, y, width, height);
-
-            ctx.strokeStyle = 'black';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x, y, width, height);
-
-            const bloqueColor = 6;
-            ctx.fillStyle = 'gray';
-            ctx.fillRect(x + 4, y + 4, bloqueColor, bloqueColor);
-            ctx.fillRect(x + width - bloqueColor - 4, y + 4, bloqueColor, bloqueColor);
-            ctx.fillRect(x + 4, y + height - bloqueColor - 4, bloqueColor, bloqueColor);
-            ctx.fillRect(x + width - bloqueColor - 4, y + height - bloqueColor - 4, bloqueColor, bloqueColor);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width / 2, y - height);
+            ctx.lineTo(x + width, y);
+            ctx.closePath();
+            ctx.fill();
         }
 
+        cerros(50, 300, 200, 150, 'darkgrey');
+        cerros(200, 300, 200, 100, 'grey');
+        cerros(350, 300, 200, 150, 'darkgrey');
 
-        bloque(260, 120, 120, 200, '#85c1f9'); 
-        bloque(179, 199, 120, 120, '#ecbdab'); 
-        
-        bloque(679, 199, 120, 120, '#51d869');    
+        ctx.fillStyle = 'green';
+        ctx.fillRect(0, 300, canvas.width, 100);
 
-        function piso() {
+        function arboloskis(x, y) {
             ctx.fillStyle = 'saddlebrown';
-            ctx.fillRect(0, 320, canvas.width, 80);
+            ctx.fillRect(x, y, 20, 60);
 
-            ctx.fillStyle = 'black';
-            for (let x = 0; x < canvas.width; x += 20) {
-                ctx.beginPath();
-                ctx.moveTo(x, 320);
-                ctx.lineTo(x + 20, 400);
-                ctx.stroke();
-            }
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            ctx.arc(x + 10, y - 10, 30, 0, Math.PI * 2);
+            ctx.fill();
         }
 
+        arboloskis(600, 270);
+        arboloskis(700, 270);
+        
 
+        ctx.fillStyle = 'saddlebrown';
+        ctx.beginPath();
+        ctx.moveTo(400, 300);
+        ctx.lineTo(420, 300);
+        ctx.lineTo(500, 400);
+        ctx.lineTo(300, 400);
+        ctx.closePath();
+        ctx.fill();
 
         
-        
-        bloque(30, 150, 40, 40, '#ff915c');
-        bloque(740, 100, 40, 40, '#ff915c');
+        function nubesonas(x, y) {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.arc(x + 30, y, 30, 0, Math.PI * 2);
+            ctx.arc(x + 60, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
 
-        bloque(130, 50, 40, 40, '#ff915c');
-        bloque(171, 50, 40, 40, '#ff915c');
+        nubesonas(500, 80);
+        nubesonas(200, 50);
 
-
-        piso();
-        
     </script>
 </body>
 </html>
