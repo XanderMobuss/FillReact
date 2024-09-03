@@ -127,9 +127,36 @@
                 target.x = Math.random() * 800;
                 target.y = Math.random() * 800;
             }
+            
+        
+            
         }
 
         function pintar() {
+
+            if (player.tocando(muro)) {
+                switch(direction){
+                    case "left":
+                        player.x+=10;
+                    break;
+
+                    case "up":
+                        player.y+=10;
+
+                    break;
+                    case "right":
+                        player.x-=10;
+                   
+                    break;
+
+                    case "down":
+                        player.y-=10;
+
+                    break;
+                }
+                direction="";
+
+            }
             ctx.fillStyle = 'lightgreen';
             ctx.fillRect(0, 0, 800, 800);
 
@@ -141,6 +168,10 @@
             ctx.fillRect(target.x, target.y, 20, 20);
             ctx.strokeRect(target.x, target.y, 20, 20);
 
+            ctx.fillRect(muro.x,muro.y,60,100);
+            ctx.strokeRect(muro.x,muro.y,60,100);
+
+            
             
 
             update();
@@ -153,8 +184,9 @@
 
        
         const player = new constructorRectangulo(280, 280, 50, 50, getRandomColor(), 10);
-        const target = new constructorRectangulo(280, 280, 20, 20, "red", 10);
-        
+        const target = new constructorRectangulo(280, 280, 20, 20, "red", 0);
+        const muro = new constructorRectangulo(40, 60,60, 100, "red", 0);
+
 
 
 
