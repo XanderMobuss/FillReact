@@ -14,15 +14,8 @@
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
 
-        
-
-
-        let y = 300;
-        let x = 300;
-
         let speed = 0;
-
-        var direction = "";
+        let direction = "";
 
         function getRandomColor() {
             var trans = '0.5';
@@ -30,12 +23,11 @@
             for (var i = 0; i < 3; i++) {
                 color += Math.floor(Math.random() * 255) + ',';
             }
-            color += trans + ')'; 
+            color += trans + ')';
             return color;
         }
-        
 
-        class constructorRectangulo {
+        class Rectángulo {
             constructor(x, y, w, h, c, s) {
                 this.x = x;
                 this.y = y;
@@ -58,7 +50,7 @@
         }
 
         document.addEventListener("keydown", function (e) {
-            console.log(e)
+            console.log(e);
 
             switch (e.keyCode) {
                 case 37:
@@ -78,7 +70,7 @@
                     speed = speed + 0.5;
                     break;
             }
-        })
+        });
 
         function update() {
             switch (direction) {
@@ -123,56 +115,48 @@
                     }
                     break;
             }
+
             if (player.tocando(target)) {
                 target.x = Math.random() * 800;
                 target.y = Math.random() * 800;
             }
-            
-        
-            
         }
 
         function pintar() {
-
-            if (player.tocando(muro)) {
-                switch(direction){
-                    case "left":
-                        player.x+=10;
-                    break;
-
-                    case "up":
-                        player.y+=10;
-
-                    break;
-                    case "right":
-                        player.x-=10;
-                   
-                    break;
-
-                    case "down":
-                        player.y-=10;
-
-                    break;
-                }
-                direction="";
-
-            }
             ctx.fillStyle = 'lightgreen';
             ctx.fillRect(0, 0, 800, 800);
 
             ctx.fillStyle = getRandomColor();
+            ctx.fillRect(player.x, player.y, player.w, player.h);
+            ctx.strokeRect(player.x, player.y, player.w, player.h);
 
-            ctx.fillRect(player.x, player.y, 50, 50);
-            ctx.strokeRect(player.x, player.y, 50, 50);
+            ctx.fillRect(target.x, target.y, target.w, target.h);
+            ctx.strokeRect(target.x, target.y, target.w, target.h);
 
-            ctx.fillRect(target.x, target.y, 20, 20);
-            ctx.strokeRect(target.x, target.y, 20, 20);
+            for (let i = 0; i < muros.length; i++) {
+                let muro = muros[i];
+                ctx.fillStyle = muro.c;
+                ctx.fillRect(muro.x, muro.y, muro.w, muro.h);
+                ctx.strokeRect(muro.x, muro.y, muro.w, muro.h);
 
-            ctx.fillRect(muro.x,muro.y,60,100);
-            ctx.strokeRect(muro.x,muro.y,60,100);
-
-            
-            
+                if (player.tocando(muro)) {
+                    switch (direction) {
+                        case "left":
+                            player.x += 10;
+                            break;
+                        case "up":
+                            player.y += 10;
+                            break;
+                        case "right":
+                            player.x -= 10;
+                            break;
+                        case "down":
+                            player.y -= 10;
+                            break;
+                    }
+                    direction = "";
+                }
+            }
 
             update();
             requestAnimationFrame(pintar);
@@ -180,18 +164,16 @@
 
         requestAnimationFrame(pintar);
 
-      
+        const player = new Rectángulo(280, 280, 50, 50, getRandomColor(), 10);
+        const target = new Rectángulo(280, 280, 20, 20, "red", 0);
 
-       
-        const player = new constructorRectangulo(280, 280, 50, 50, getRandomColor(), 10);
-        const target = new constructorRectangulo(280, 280, 20, 20, "red", 0);
-        const muro = new constructorRectangulo(40, 60,60, 100, "red", 0);
-
-
-
+        const muros = [
+            new Rectángulo(40, 60, 60, 200, "red", 0),
+            new Rectángulo(300, 150, 200, 60, "blue", 0),
+            new Rectángulo(500, 500, 60, 150, "green", 0)
+        ];
 
     </script>
-   
 </body>
 
 </html>
