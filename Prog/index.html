@@ -4,18 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Juego con Pausa y Score</title>
 </head>
 
 <body>
     <canvas id="my_canvas" width="800" height="800"></canvas>
+    <p>Score: <span id="score">0</span></p>
+    <button id="pauseButton">Pausar</button>
 
     <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
         const ctx = my_canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+        const pauseButton = document.getElementById('pauseButton');
 
         let speed = 0;
         let direction = "";
+        let paused = false;
+        let score = 0;
 
         function getRandomColor() {
             var trans = '0.5';
@@ -27,152 +33,120 @@
             return color;
         }
 
-        class Rectángulo {
-            constructor(x, y, w, h, c, s) {
+        class Rectangulo {
+            constructor(x, y, w, h, c) {
                 this.x = x;
                 this.y = y;
                 this.w = w;
                 this.h = h;
                 this.c = c;
-                this.s = s;
+            }
+
+            draw() {
+                ctx.fillStyle = this.c;
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+                ctx.strokeRect(this.x, this.y, this.w, this.h);
             }
 
             tocando(otro) {
-                if (this.x < otro.x + otro.w &&
+                return (this.x < otro.x + otro.w &&
                     this.x + this.w > otro.x &&
                     this.y < otro.y + otro.h &&
-                    this.y + this.h > otro.y) {
-
-                    return true;
-                }
-                return false;
+                    this.y + this.h > otro.y);
             }
         }
 
         document.addEventListener("keydown", function (e) {
-            console.log(e);
-
             switch (e.keyCode) {
-                case 37:
-                    direction = "left";
-                    break;
-                case 38:
-                    direction = "up";
-                    break;
-                case 39:
-                    direction = "right";
-                    break;
-                case 40:
-                    direction = "down";
-                    break;
-                case 32:
-                    direction = "space";
-                    speed = speed + 0.5;
-                    break;
+                case 37: direction = "left"; break;
+                case 38: direction = "up"; break;
+                case 39: direction = "right"; break;
+                case 40: direction = "down"; break;
+                case 32: speed += 0.5; break;
+                case 80: togglePause(); break; 
             }
         });
 
-        function update() {
-            switch (direction) {
-                case "left":
-                    if (speed > 10) {
-                        player.x = player.x - 10 - speed;
-                    } else {
-                        player.x = player.x - 10;
-                    }
-                    if (player.x <= -40) {
-                        player.x = 830;
-                    }
-                    break;
-                case "up":
-                    if (speed > 10) {
-                        player.y = player.y - 10 - speed;
-                    } else {
-                        player.y = player.y - 10;
-                    }
-                    if (player.y <= -40) {
-                        player.y = 830;
-                    }
-                    break;
-                case "right":
-                    if (speed > 10) {
-                        player.x = player.x + 10 + speed;
-                    } else {
-                        player.x = player.x + 10;
-                    }
-                    if (player.x >= 800) {
-                        player.x = -40;
-                    }
-                    break;
-                case "down":
-                    if (speed > 10) {
-                        player.y = player.y + 10 + speed;
-                    } else {
-                        player.y = player.y + 10;
-                    }
-                    if (player.y >= 800) {
-                        player.y = -40;
-                    }
-                    break;
-            }
+        pauseButton.addEventListener('click', togglePause);
 
-            if (player.tocando(target)) {
-                target.x = Math.random() * 800;
-                target.y = Math.random() * 800;
+        function togglePause() {
+            paused = !paused;
+            if (!paused) {
+                requestAnimationFrame(pintar);
+                pauseButton.innerText = "Pausar";
+            } else {
+                pauseButton.innerText = "Reanudar";
             }
         }
 
-        function pintar() {
-            ctx.fillStyle = 'lightgreen';
-            ctx.fillRect(0, 0, 800, 800);
+        function update() {
+            if (paused) return; 
 
-            ctx.fillStyle = getRandomColor();
-            ctx.fillRect(player.x, player.y, player.w, player.h);
-            ctx.strokeRect(player.x, player.y, player.w, player.h);
+            switch (direction) {
+                case "left": player.x -= 10 + speed; break;
+                case "up": player.y -= 10 + speed; break;
+                case "right": player.x += 10 + speed; break;
+                case "down": player.y += 10 + speed; break;
+            }
 
-            ctx.fillRect(target.x, target.y, target.w, target.h);
-            ctx.strokeRect(target.x, target.y, target.w, target.h);
+         
+            if (player.x < -40) player.x = 830;
+            if (player.x > 800) player.x = -40;
+            if (player.y < -40) player.y = 830;
+            if (player.y > 800) player.y = -40;
 
-            for (let i = 0; i < muros.length; i++) {
-                let muro = muros[i];
-                ctx.fillStyle = muro.c;
-                ctx.fillRect(muro.x, muro.y, muro.w, muro.h);
-                ctx.strokeRect(muro.x, muro.y, muro.w, muro.h);
+           
+            if (player.tocando(target)) {
+                target.x = Math.random() * 780;
+                target.y = Math.random() * 780;
+                score += 10; 
+                scoreDisplay.innerText = score;
+            }
 
+            
+            for (let muro of muros) {
                 if (player.tocando(muro)) {
                     switch (direction) {
-                        case "left":
-                            player.x += 10;
-                            break;
-                        case "up":
-                            player.y += 10;
-                            break;
-                        case "right":
-                            player.x -= 10;
-                            break;
-                        case "down":
-                            player.y -= 10;
-                            break;
+                        case "left": player.x += 10 + speed; break;
+                        case "up": player.y += 10 + speed; break;
+                        case "right": player.x -= 10 + speed; break;
+                        case "down": player.y -= 10 + speed; break;
                     }
                     direction = "";
                 }
             }
+        }
+
+        function pintar() {
+            if (paused) return; 
+
+            ctx.clearRect(0, 0, my_canvas.width, my_canvas.height);
+
+           
+            ctx.fillStyle = 'lightgreen';
+            ctx.fillRect(0, 0, my_canvas.width, my_canvas.height);
+
+            
+            player.draw();
+            target.draw();
+            muros.forEach(muro => muro.draw());
 
             update();
             requestAnimationFrame(pintar);
         }
 
-        requestAnimationFrame(pintar);
+       
+        const player = new Rectangulo(280, 280, 50, 50, getRandomColor());
+        const target = new Rectangulo(Math.random() * 780, Math.random() * 780, 20, 20, "red");
 
-        const player = new Rectángulo(280, 280, 50, 50, getRandomColor(), 10);
-        const target = new Rectángulo(280, 280, 20, 20, "red", 0);
-
+        
         const muros = [
-            new Rectángulo(40, 60, 60, 200, "red", 0),
-            new Rectángulo(300, 150, 200, 60, "blue", 0),
-            new Rectángulo(500, 500, 60, 150, "green", 0)
+            new Rectangulo(40, 60, 60, 200, "rgba(0, 0, 0, 0.5)"),
+            new Rectangulo(300, 400, 60, 200, "rgba(0, 0, 0, 0.5)"),
+            new Rectangulo(500, 100, 60, 200, "rgba(0, 0, 0, 0.5)")
         ];
 
+        requestAnimationFrame(pintar);
     </script>
 </body>
 
