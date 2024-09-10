@@ -11,6 +11,7 @@
     <canvas id="my_canvas" width="800" height="800"></canvas>
     <p>Score: <span id="score">0</span></p>
     <button id="pauseButton">Pausar</button>
+    <audio id="puntoSonido" src="punto.mp3"></audio>
 
     <script type="text/javascript">
         const my_canvas = document.getElementById('my_canvas');
@@ -23,6 +24,12 @@
         let paused = false;
         let score = 0;
 
+        const jugadorImagen = new Image();
+        jugadorImagen.src = 'jugador.jpg';
+
+        const puntos = document.getElementById('puntoSonido');
+
+
         function getRandomColor() {
             var trans = '0.5';
             var color = 'rgba(';
@@ -34,18 +41,24 @@
         }
 
         class Rectangulo {
-            constructor(x, y, w, h, c) {
+            constructor(x, y, w, h, c,img=null) {
                 this.x = x;
                 this.y = y;
                 this.w = w;
                 this.h = h;
                 this.c = c;
+                this.img=img;
             }
 
             draw() {
-                ctx.fillStyle = this.c;
-                ctx.fillRect(this.x, this.y, this.w, this.h);
-                ctx.strokeRect(this.x, this.y, this.w, this.h);
+                
+                if (this.img) {
+                    ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
+                } else {
+                    ctx.fillStyle = this.c;
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                    ctx.strokeRect(this.x, this.y, this.w, this.h);
+                }
             }
 
             tocando(otro) {
@@ -101,6 +114,8 @@
                 target.y = Math.random() * 780;
                 score += 10; 
                 scoreDisplay.innerText = score;
+
+                puntos.play();
             }
 
             
@@ -136,7 +151,7 @@
         }
 
        
-        const player = new Rectangulo(280, 280, 50, 50, getRandomColor());
+        const player = new Rectangulo(280, 280, 50, 50, getRandomColor(),jugadorImagen);
         const target = new Rectangulo(Math.random() * 780, Math.random() * 780, 20, 20, "red");
 
         
