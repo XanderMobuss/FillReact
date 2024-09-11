@@ -24,10 +24,26 @@
         <button @click="resultadosuma=num1+num2">Suma</button>
         <br>
         <label for="">Resultado: {{resultadosuma}}</label>
+        <br>
+        <ul>
+            <li v-for="(show, index) in users" :key="index">
+                <strong>{{show.name}} - {{show.apellido}}</strong>
+            </li>
+        </ul>
+        <br>
+        <label for="">Nombre</label>
+        <br>
+        <input type="text" v-model="nom">
+        <br>
+        <label for="">Apellido</label>
+        <br>
+        <input type="text" v-model="ape">
+        <br>
+        <button  type="button" @click="addUser">Añadir usuario</button>
         
 
-
     </div>
+    
 
     <script>
     const { createApp, ref } = Vue
@@ -40,12 +56,34 @@
         const num1 = ref(0);
         const num2 = ref(0);
         const resultadosuma = ref(0);
+        const nom = ref('');
+        const ape = ref('');
+        const users = ref([
+            {
+                "name":"","apellido":""}
+        ])
         return {
             message,
             usuario,
             count,
-            resultadosuma
+            resultadosuma,
+            nom,
+            ape,
+            users
         }
+        },
+
+        methods: {
+            addUser()
+            {
+                const tmp = {
+                    "name":this.nom, 
+                    "apellido":this.ape
+
+                }
+                this.users.push(tmp);
+            }
+
         }
     }).mount('#app')
 </script>
