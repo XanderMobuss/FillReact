@@ -3,88 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue</title>
+    <title>Tabla Usuarios</title>
 </head>
 <body>
-    
-    
-</body>
+    <div id="app">
+        <div v-if="!logeado">
+            <h3>Login</h3>
+            <label for="username">Username</label>
+            <br>
+            <input type="text" v-model="loguser">
+            <br>
+            <label for="password">Password</label>
+            <br>
+            <input type="password" v-model="logpass">
+            <br>
+            <button @click="login">Login</button>
+            <p v-if="logerror" style="color: red;">{{ logerror }}</p>
+        </div>
+
+        <div v-else>
+            <h3>Bienvenido, {{ sesionusuario.name }}!</h3>
+            <button @click="logout">Logout</button>
+            <br><br>
+
+            <label for="">Nombre</label>
+            <br>
+            <input type="text" v-model="nom">
+            <br>
+            <label for="">Apellido</label>
+            <br>
+            <input type="text" v-model="ape">
+            <br>
+            <button type="button" @click="addUser">Añadir usuario</button>
+            
+            <h3>Usuarios Registrados</h3>
+            <ul>
+                <li v-for="(user, index) in users" :key="index">
+                    <strong>{{ user.name }} - {{ user.apellido }}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <div id="app" >
-        <label for="" >Hola {{usuario}}</label>
-        <br>
-        <input type="text" v-model="usuario">
-        <br>
-        <button @click="count++">Count is: {{count}}</button>
-        <br>
-        <input type="number" v-model="num1">
-        <br>
-        <input type="number" v-model="num2">
-        <button @click="resultadosuma=num1+num2">Suma</button>
-        <br>
-        <label for="">Resultado: {{resultadosuma}}</label>
-        <br>
-        <ul>
-            <li v-for="(show, index) in users" :key="index">
-                <strong>{{show.name}} - {{show.apellido}}</strong>
-            </li>
-        </ul>
-        <br>
-        <label for="">Nombre</label>
-        <br>
-        <input type="text" v-model="nom">
-        <br>
-        <label for="">Apellido</label>
-        <br>
-        <input type="text" v-model="ape">
-        <br>
-        <button  type="button" @click="addUser">Añadir usuario</button>
-        
-
-    </div>
-    
-
     <script>
-    const { createApp, ref } = Vue
+        const { createApp, ref } = Vue
 
-    createApp({
-        setup() {
-        const message = ref('Hello vue!')
-        const usuario = ref('');
-        const count = ref(0);
-        const num1 = ref(0);
-        const num2 = ref(0);
-        const resultadosuma = ref(0);
-        const nom = ref('');
-        const ape = ref('');
-        const users = ref([
-            {
-                "name":"","apellido":""}
-        ])
-        return {
-            message,
-            usuario,
-            count,
-            resultadosuma,
-            nom,
-            ape,
-            users
-        }
-        },
+        createApp({
+            setup() {
+                const logeado = ref(false);
+                const loguser = ref('');
+                const logpass = ref('');
+                const logerror = ref('');
+                const sesionusuario = ref({});
 
-        methods: {
-            addUser()
-            {
-                const tmp = {
-                    "name":this.nom, 
-                    "apellido":this.ape
+                const nom = ref('');
+                const ape = ref('');
+                const users = ref([]);
 
+                const fetchUsers = async () => {
+                    try {
+                        const response = await fetch('users.json');
+                        if (!response.ok) {
+                            throw new Error('Error al cargar usuarios');
+                        }
+                        const data = await response.json();
+                        users.value = data; 
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+
+                if (sessionStorage.getItem('user')) {
+                    sesionusuario.value = JSON.parse(sessionStorage.getItem('user'));
+                    logeado.value = true;
+                } else {
+                    
+                    fetchUsers();
                 }
-                this.users.push(tmp);
-            }
 
-        }
-    }).mount('#app')
-</script>
+                return {
+                    loguser,
+                    logpass,
+                    logerror,
+                    logeado,
+                    sesionusuario,
+                    nom,
+                    ape,
+                    users
+                };
+            },
+            methods: {
+                login() {
+                    const user = this.users.find(u => u.username === this.loguser && u.password === this.logpass);
+                    if (user) {
+                        sessionStorage.setItem('user', JSON.stringify(user));
+                        this.sesionusuario = user;
+                        this.logeado = true;
+                        this.logerror = '';
+                    } else {
+                        this.logerror = "Usuario o contraseña incorrectos";
+                    }
+                },
+                logout() {
+                    sessionStorage.removeItem('user');
+                    this.sesionusuario = {};
+                    this.logeado = false;
+                },
+                addUser() {
+                    const newUser = {
+                        "name": this.nom,
+                        "apellido": this.ape
+                    };
+                    this.users.push(newUser);
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
 </html>
