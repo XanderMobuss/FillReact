@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +8,22 @@
 <body>
     <div id="app">
         <div v-if="!logeado">
-            <h3>Login</h3>
-            <label for="username">Username</label>
+            <h3>Iniciar Sesión</h3>
+            <label for="username">Usuario</label>
             <br>
             <input type="text" v-model="loguser">
             <br>
-            <label for="password">Password</label>
+            <label for="password">Contraseña</label>
             <br>
             <input type="password" v-model="logpass">
             <br>
-            <button @click="login">Login</button>
+            <button @click="login">Iniciar Sesión</button>
             <p v-if="logerror" style="color: red;">{{ logerror }}</p>
         </div>
 
         <div v-else>
             <h3>Bienvenido, {{ sesionusuario.name }}!</h3>
-            <button @click="logout">Logout</button>
+            <button @click="logout">Cerrar Sesión</button>
             <br><br>
 
             <label for="">Nombre</label>
@@ -34,12 +34,14 @@
             <br>
             <input type="text" v-model="ape">
             <br>
-            <button type="button" @click="addUser">Añadir usuario</button>
+            <button type="button" @click="addUser">{{ a === null ? 'Añadir usuario' : 'Actualizar usuario' }}</button>
             
             <h3>Usuarios Registrados</h3>
             <ul>
                 <li v-for="(user, index) in users" :key="index">
                     <strong>{{ user.name }} - {{ user.apellido }}</strong>
+                    <button @click="editUser(index)">Editar</button>
+                    <button @click="deleteUser(index)">Eliminar</button>
                 </li>
             </ul>
         </div>
@@ -61,6 +63,7 @@
                 const nom = ref('');
                 const ape = ref('');
                 const users = ref([]);
+                const a = ref(null);
 
                 const fetchUsers = async () => {
                     try {
@@ -79,7 +82,6 @@
                     sesionusuario.value = JSON.parse(sessionStorage.getItem('user'));
                     logeado.value = true;
                 } else {
-                    
                     fetchUsers();
                 }
 
@@ -91,7 +93,8 @@
                     sesionusuario,
                     nom,
                     ape,
-                    users
+                    users,
+                    a
                 };
             },
             methods: {
@@ -112,11 +115,33 @@
                     this.logeado = false;
                 },
                 addUser() {
-                    const newUser = {
-                        "name": this.nom,
-                        "apellido": this.ape
-                    };
-                    this.users.push(newUser);
+                    if (this.nom.trim() === '' || this.ape.trim() === '') {
+                        alert('Por favor, complete todos los campos.');
+                        return;
+                    }
+
+                    if (this.a !== null) {
+                        this.users[this.a].name = this.nom;
+                        this.users[this.a].apellido = this.ape;
+                        this.a = null;
+                    } else {
+                        const newUser = {
+                            name: this.nom,
+                            apellido: this.ape
+                        };
+                        this.users.push(newUser);
+                    }
+
+                    this.nom = '';
+                    this.ape = '';
+                },
+                editUser(index) {
+                    this.nom = this.users[index].name;
+                    this.ape = this.users[index].apellido;
+                    this.a = index;
+                },
+                deleteUser(index) {
+                    this.users.splice(index, 1);
                 }
             }
         }).mount('#app')
