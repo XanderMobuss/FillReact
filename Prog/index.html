@@ -6,23 +6,28 @@
     <title>Ransepolis</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+
     <style>
+        .peliculas-contenedor {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centrar las películas en el contenedor */
+        }
         .pelicula {
-            border: 1px solid #ccc;
-            padding: 10px;
             margin: 10px;
-            display: inline-block;
-            width: 200px;
+            width: 150px; /* Ancho del contenedor de cada película */
             text-align: center;
         }
-        img {
-            width: 100%;
-            height: auto;
+        .pelicula img {
+            width: 100%; /* Hacer que la imagen ocupe todo el ancho del contenedor */
+            height: auto; /* Mantener la proporción de aspecto */
+            max-width: 150px; /* Limitar el ancho máximo */
+            max-height: 225px; /* Limitar la altura máxima */
+            border-radius: 5px; /* Bordes redondeados opcionales */
         }
-        .cargar-mas {
-            margin: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+        .detalle {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -30,9 +35,8 @@
     <div id="app">
         <h1>Ransepolis</h1>
         <div v-if="!estaConectado">
-            <h2>Iniciar Sesión</h2>
-            <input type="text" v-model="nombreUsuario" placeholder="Usuario" />
-            <input type="password" v-model="contrasena" placeholder="Contraseña" />
+            <input v-model="nombreUsuario" placeholder="Usuario" />
+            <input v-model="contrasena" type="password" placeholder="Contraseña" />
             <button @click="iniciarSesion">Iniciar Sesión</button>
             <p v-if="mensajeError">{{ mensajeError }}</p>
         </div>
@@ -42,12 +46,21 @@
             <div class="peliculas-contenedor">
                 <div class="pelicula" v-for="pelicula in peliculas" :key="pelicula.id">
                     <img :src="obtenerUrlImagen(pelicula.poster_path)" :alt="pelicula.title" />
-                    <h3>{{ pelicula.title }}</h3>
+                    <h3 @click="verDetalles(pelicula.id)">{{ pelicula.title }}</h3>
                     <button @click="agregarCalificacion(pelicula.id)">Añadir Calificación</button>
                     <button @click="eliminarCalificacion(pelicula.id)">Eliminar Calificación</button>
                 </div>
             </div>
             <button class="cargar-mas" @click="cargarMasPeliculas" v-if="hayMasPeliculas">Cargar Más</button>
+
+            <div class="detalle" v-if="detallePelicula">
+                <h2>{{ detallePelicula.title }}</h2>
+                <img :src="obtenerUrlImagen(detallePelicula.poster_path)" :alt="detallePelicula.title" />
+                <p>{{ detallePelicula.overview }}</p>
+                <p><strong>Fecha de lanzamiento:</strong> {{ detallePelicula.release_date }}</p>
+                <p><strong>Calificación:</strong> {{ detallePelicula.vote_average }}/10</p>
+                <button @click="detallePelicula = null">Cerrar</button>
+            </div>
         </div>
     </div>
 
@@ -65,6 +78,7 @@
                 const paginaActual = ref(1);
                 const totalPaginas = ref(0);
                 const hayMasPeliculas = ref(false);
+                const detallePelicula = ref(null);
 
                 const API_KEY = '62b2f1d8fe30f473ecec0874ca567cdf';
                 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -76,7 +90,6 @@
                         mensajeError.value = 'Por favor, complete todos los campos.';
                         return;
                     }
-
                     try {
                         const respuestaToken = await axios.get(`${BASE_URL}/authentication/token/new?api_key=${API_KEY}`);
                         const requestToken = respuestaToken.data.request_token;
@@ -160,6 +173,15 @@
                     return ruta ? `${IMAGE_BASE_URL}${ruta}` : 'https://via.placeholder.com/200x300?text=Sin+Imagen';
                 };
 
+                const verDetalles = async (peliculaId) => {
+                    try {
+                        const respuestaDetalles = await axios.get(`${BASE_URL}/movie/${peliculaId}?api_key=${API_KEY}`);
+                        detallePelicula.value = respuestaDetalles.data;
+                    } catch (error) {
+                        mensajeError.value = 'Error al obtener los detalles de la película: ' + error.message;
+                    }
+                };
+
                 return {
                     nombreUsuario,
                     contrasena,
@@ -167,14 +189,18 @@
                     peliculas,
                     estaConectado,
                     mensajeError,
+                    paginaActual,
+                    totalPaginas,
+                    hayMasPeliculas,
+                    detallePelicula,
                     iniciarSesion,
+                    obtenerUrlImagen,
                     agregarCalificacion,
                     eliminarCalificacion,
-                    obtenerUrlImagen,
                     cargarMasPeliculas,
-                    hayMasPeliculas,
+                    verDetalles,
                 };
-            },
+            }
         }).mount('#app');
     </script>
 </body>
