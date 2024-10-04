@@ -1,207 +1,33 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ransepolis</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vue-router@4"></script>
-
-    <style>
-        .peliculas-contenedor {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center; /* Centrar las películas en el contenedor */
-        }
-        .pelicula {
-            margin: 10px;
-            width: 150px; /* Ancho del contenedor de cada película */
-            text-align: center;
-        }
-        .pelicula img {
-            width: 100%; /* Hacer que la imagen ocupe todo el ancho del contenedor */
-            height: auto; /* Mantener la proporción de aspecto */
-            max-width: 150px; /* Limitar el ancho máximo */
-            max-height: 225px; /* Limitar la altura máxima */
-            border-radius: 5px; /* Bordes redondeados opcionales */
-        }
-        .detalle {
-            margin-top: 20px;
-        }
-    </style>
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <div id="app">
-        <h1>Ransepolis</h1>
-        <div v-if="!estaConectado">
-            <input v-model="nombreUsuario" placeholder="Usuario" />
-            <input v-model="contrasena" type="password" placeholder="Contraseña" />
-            <button @click="iniciarSesion">Iniciar Sesión</button>
-            <p v-if="mensajeError">{{ mensajeError }}</p>
-        </div>
-        
-        <div v-else>
-            <h2>Películas Disponibles</h2>
-            <div class="peliculas-contenedor">
-                <div class="pelicula" v-for="pelicula in peliculas" :key="pelicula.id">
-                    <img :src="obtenerUrlImagen(pelicula.poster_path)" :alt="pelicula.title" />
-                    <h3 @click="verDetalles(pelicula.id)">{{ pelicula.title }}</h3>
-                    <button @click="agregarCalificacion(pelicula.id)">Añadir Calificación</button>
-                    <button @click="eliminarCalificacion(pelicula.id)">Eliminar Calificación</button>
-                </div>
-            </div>
-            <button class="cargar-mas" @click="cargarMasPeliculas" v-if="hayMasPeliculas">Cargar Más</button>
-
-            <div class="detalle" v-if="detallePelicula">
-                <h2>{{ detallePelicula.title }}</h2>
-                <img :src="obtenerUrlImagen(detallePelicula.poster_path)" :alt="detallePelicula.title" />
-                <p>{{ detallePelicula.overview }}</p>
-                <p><strong>Fecha de lanzamiento:</strong> {{ detallePelicula.release_date }}</p>
-                <p><strong>Calificación:</strong> {{ detallePelicula.vote_average }}/10</p>
-                <button @click="detallePelicula = null">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const { createApp, ref } = Vue;
-
-        createApp({
-            setup() {
-                const nombreUsuario = ref('');
-                const contrasena = ref('');
-                const idSesion = ref('');
-                const peliculas = ref([]);
-                const estaConectado = ref(false);
-                const mensajeError = ref('');
-                const paginaActual = ref(1);
-                const totalPaginas = ref(0);
-                const hayMasPeliculas = ref(false);
-                const detallePelicula = ref(null);
-
-                const API_KEY = '62b2f1d8fe30f473ecec0874ca567cdf';
-                const BASE_URL = 'https://api.themoviedb.org/3';
-                const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-
-                const iniciarSesion = async () => {
-                    mensajeError.value = '';
-                    if (!nombreUsuario.value || !contrasena.value) {
-                        mensajeError.value = 'Por favor, complete todos los campos.';
-                        return;
-                    }
-                    try {
-                        const respuestaToken = await axios.get(`${BASE_URL}/authentication/token/new?api_key=${API_KEY}`);
-                        const requestToken = respuestaToken.data.request_token;
-
-                        const respuestaValidar = await axios.post(`${BASE_URL}/authentication/token/validate_with_login?api_key=${API_KEY}`, {
-                            username: nombreUsuario.value,
-                            password: contrasena.value,
-                            request_token: requestToken,
-                        });
-
-                        if (respuestaValidar.data.success) {
-                            idSesion.value = await obtenerIdSesion(requestToken);
-                            estaConectado.value = true;
-                            await obtenerPeliculasDisponibles();
-                        } else {
-                            mensajeError.value = 'Usuario o contraseña incorrectos.';
-                        }
-                    } catch (error) {
-                        if (error.response && error.response.status === 401) {
-                            mensajeError.value = 'Usuario o contraseña incorrectos.';
-                        } else {
-                            mensajeError.value = 'Error en la solicitud: ' + error.message;
-                        }
-                    }
-                };
-
-                const obtenerIdSesion = async (requestToken) => {
-                    const respuestaSesion = await axios.post(`${BASE_URL}/authentication/session/new?api_key=${API_KEY}`, {
-                        request_token: requestToken,
-                    });
-                    return respuestaSesion.data.session_id;
-                };
-
-                const obtenerPeliculasDisponibles = async (pagina = 1) => {
-                    try {
-                        const respuesta = await axios.get(`${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${pagina}`);
-                        peliculas.value.push(...respuesta.data.results);
-                        totalPaginas.value = respuesta.data.total_pages;
-                        hayMasPeliculas.value = pagina < totalPaginas.value;
-                    } catch (error) {
-                        mensajeError.value = 'Error al obtener películas: ' + error.message;
-                    }
-                };
-
-                const cargarMasPeliculas = () => {
-                    if (paginaActual.value < totalPaginas.value) {
-                        paginaActual.value++;
-                        obtenerPeliculasDisponibles(paginaActual.value);
-                    }
-                };
-
-                const agregarCalificacion = async (peliculaId) => {
-                    const calificacion = prompt("Ingresa tu calificación (1-10):");
-                    if (calificacion !== null) {
-                        const valorCalificacion = parseFloat(calificacion);
-                        if (isNaN(valorCalificacion) || valorCalificacion < 1 || valorCalificacion > 10) {
-                            alert('La calificación debe estar entre 1 y 10 y no debe contener caracteres inválidos.');
-                            return;
-                        }
-                        try {
-                            await axios.post(`${BASE_URL}/movie/${peliculaId}/rating?api_key=${API_KEY}&session_id=${idSesion.value}`, {
-                                value: valorCalificacion,
-                            });
-                            alert('Calificación añadida.');
-                        } catch (error) {
-                            alert('Error al añadir la calificación: ' + error.message);
-                        }
-                    }
-                };
-
-                const eliminarCalificacion = async (peliculaId) => {
-                    try {
-                        await axios.delete(`${BASE_URL}/movie/${peliculaId}/rating?api_key=${API_KEY}&session_id=${idSesion.value}`);
-                        alert('Calificación eliminada.');
-                    } catch (error) {
-                        alert('Error al eliminar la calificación: ' + error.message);
-                    }
-                };
-
-                const obtenerUrlImagen = (ruta) => {
-                    return ruta ? `${IMAGE_BASE_URL}${ruta}` : 'https://via.placeholder.com/200x300?text=Sin+Imagen';
-                };
-
-                const verDetalles = async (peliculaId) => {
-                    try {
-                        const respuestaDetalles = await axios.get(`${BASE_URL}/movie/${peliculaId}?api_key=${API_KEY}`);
-                        detallePelicula.value = respuestaDetalles.data;
-                    } catch (error) {
-                        mensajeError.value = 'Error al obtener los detalles de la película: ' + error.message;
-                    }
-                };
-
-                return {
-                    nombreUsuario,
-                    contrasena,
-                    idSesion,
-                    peliculas,
-                    estaConectado,
-                    mensajeError,
-                    paginaActual,
-                    totalPaginas,
-                    hayMasPeliculas,
-                    detallePelicula,
-                    iniciarSesion,
-                    obtenerUrlImagen,
-                    agregarCalificacion,
-                    eliminarCalificacion,
-                    cargarMasPeliculas,
-                    verDetalles,
-                };
-            }
-        }).mount('#app');
-    </script>
+   <div class="fondo">
+    <fieldset >
+        <legend class="titulos">Formulario de acceso</legend>
+        <fieldset>      
+            <legend class="titulos">Correo electrónico</legend>
+            <input type="text">
+        </fieldset>
+        <fieldset>      
+            <legend class="titulos">Contraseña</legend>
+            <input type="text">
+        </fieldset>
+        <ul>
+            <li><input type="checkbox">Administrador</li>
+            <li><input type="checkbox">Gerente</li>
+            <li><input type="checkbox">Propietario</li>
+            <li><input type="checkbox">Agente de ventas</li>
+            <li><input type="checkbox">Prospecto</li>
+        </ul>
+        <button>Acceder</button>
+    </fieldset>
+    <label for="" class="contra">¿Olvidó su contraseña?</label>
+</div>
 </body>
 </html>

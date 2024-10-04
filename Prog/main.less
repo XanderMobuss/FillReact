@@ -1,0 +1,39 @@
+@main_color:red;
+@color1: #f8d7da; 
+@color2: #d4edda; 
+@color3: #d1ecf1; 
+@color4: #fff3cd;  
+@color5: #f0e68c;  
+@contracolor: purple;
+
+.titulos{
+    color:@main_color;
+}
+.fondo{
+    background-color: blue;
+    margin: 10px;
+    padding:10px;
+}
+
+ul li{
+    &:nth-child(1) {
+        background-color: @color1;
+    }
+    &:nth-child(2) {
+        background-color: @color2;
+    }
+    &:nth-child(3) {
+        background-color: @color3;
+    }
+    &:nth-child(4) {
+        background-color: @color4;
+    }
+    &:nth-child(5) {
+        background-color: @color5;
+    }
+}
+
+.contra{
+    text-decoration: underline;
+    color: @contracolor;
+}
