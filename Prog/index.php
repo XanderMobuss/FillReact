@@ -108,7 +108,7 @@
   <div class="col-md-9">
     <h2>Productos</h2>
     <div class="row">
-      <?php include 'controlador.php'; ?>
+      <?php include 'app/productController.php'; ?>
 
       <?php if (!empty($productos['data'])): ?>
         <?php foreach ($productos['data'] as $producto): ?>
@@ -118,7 +118,7 @@
               <div class="card-body">
                 <h5 class="card-title"><?php echo $producto['name']; ?></h5>
                 <p class="card-text"><?php echo $producto['description']; ?></p>
-                <button class="btn btn-primary">Agregar al carrito</button>
+                <a href="details.php?id=<?php echo $producto['id'];?>"<button class="btn btn-primary" >Agregar al carrito</button></a>
               </div>
             </div>
           </div>
