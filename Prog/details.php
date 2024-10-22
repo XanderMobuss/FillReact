@@ -117,7 +117,6 @@
           <div class="card-body">
             <h5 class="card-title"><?php echo $producto['data']['name'] ?? 'Nombre no disponible'; ?></h5>
             <p class="card-text"><?php echo $producto['data']['description'] ?? 'Descripción no disponible'; ?></p>
-            <p class="card-text">Precio: $<?php echo $producto['data']['amount'] ?? 'No disponible'; ?></p>
           </div>
       </div>
         <?php else: ?>
@@ -125,37 +124,7 @@
   <?php endif; ?>
   
       </div>
-      <table class="table">
-        
-        <p>Historial de pedidos</p>
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
+      
   </div>
 
   
