@@ -103,7 +103,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -113,6 +112,7 @@
         </div>
         <div class="modal-body">
           <form id="productoForm">
+            <input type="hidden" id="productId">
             <div class="mb-3">
               <label for="productEmail" class="form-label">Correo</label>
               <input type="email" class="form-control" id="productEmail" required>
@@ -143,18 +143,49 @@
       product = JSON.parse(product);
       document.getElementById('productEmail').value = ''; 
       document.getElementById('productPassword').value = ''; 
-      document.getElementById('productName').value = product.name; 
-      document.getElementById('productDescription').value = product.description; 
+      document.getElementById('productName').value = product.name ? ''; 
+      document.getElementById('productDescription').value = product.description ? ''; 
     }
 
     
 
     document.getElementById('productoForm').onsubmit = function(e) {
-      e.preventDefault();
-      alert('Producto guardado');
-      var modal = bootstrap.Modal.getInstance(document.getElementById('productoModal'));
-      modal.hide();
-    };
+    e.preventDefault();
+    
+    let productId = document.getElementById('productId').value;
+    let name = document.getElementById('productName').value;
+    let description = document.getElementById('productDescription').value;
+    let token = '<?php echo $_SESSION["user_data"]->token;?>';
+    
+    let method = productId ? 'PUT' : 'POST';
+    let url = productId ? `https://crud.jonathansoto.mx/api/products/${productId}` : 'https://crud.jonathansoto.mx/api/products';
+
+    let formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+      
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer 422|3swFeMEYBqDdjOsxSxr6gjMlFF5bix3kxg2qffuG'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Producto guardado correctamente');
+            let modal = bootstrap.Modal.getInstance(document.getElementById('productoModal'));
+            modal.hide();
+            location.reload();
+        } else {
+            alert('Error al guardar el producto');
+        }
+    })
+    .catch(error => {
+        alert('Error en la solicitud: ' + error);
+    });
+};
   </script>
 </body>
 </html>
