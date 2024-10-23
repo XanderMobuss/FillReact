@@ -129,6 +129,10 @@
               <label for="editProductSlug" class="form-label">Slug</label>
               <input type="text" class="form-control" id="editProductSlug">
             </div>
+            <div class="mb-3">
+              <label for="editProductCover" class="form-label">Imagen</label>
+              <input type="text" class="form-control" id="editProductCover">
+            </div>
             <button type="submit" class="btn btn-primary">Actualizar Producto</button>
           </form>
         </div>
@@ -145,6 +149,7 @@
       document.getElementById('editProductDescription').value = product.description;
       document.getElementById('editProductFeatures').value = product.features;
       document.getElementById('editProductSlug').value = product.slug;
+      document.getElementById('editProductCover').value = product.cover;
     }
 
     document.getElementById('addProductForm').onsubmit = function(e) {
@@ -181,16 +186,16 @@
         name: document.getElementById('editProductName').value,
         description: document.getElementById('editProductDescription').value,
         features: document.getElementById('editProductFeatures').value,
-        slug: document.getElementById('editProductSlug').value
+        slug: document.getElementById('editProductSlug').value,
+        cover: document.getElementById('editProductCover').value
       };
 
       fetch(`https://crud.jonathansoto.mx/api/products/${data.id}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Authorization': 'Bearer 422|3swFeMEYBqDdjOsxSxr6gjMlFF5bix3kxg2qffuG',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
       })
       .then(response => response.json())
       .then(result => {
